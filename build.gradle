@@ -16,6 +16,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   implementation 'org.flywaydb:flyway-core'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  implementation 'org.postgresql:postgresql'
 }
 
 test {

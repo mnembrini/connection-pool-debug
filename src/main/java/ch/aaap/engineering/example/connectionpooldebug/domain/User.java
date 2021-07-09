@@ -1,5 +1,6 @@
 package ch.aaap.engineering.example.connectionpooldebug.domain;
 
+import java.util.StringJoiner;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,5 +35,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("name='" + name + "'")
+                .toString();
     }
 }

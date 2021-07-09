@@ -8,3 +8,6 @@ spring:
     url: "jdbc:postgresql://localhost:5432/users"
     username: user
     password: example
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 2000 # in ms (default value)

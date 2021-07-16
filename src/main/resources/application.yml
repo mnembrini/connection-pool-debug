@@ -16,3 +16,4 @@ logging:
   level:
     org.springframework: DEBUG
     ch.aaap.engineering.example: DEBUG
+    com.zaxxer.hikari: DEBUG

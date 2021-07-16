@@ -12,7 +12,7 @@ public class DocumentService {
     private static final Logger log = LoggerFactory.getLogger(DocumentService.class);
 
 
-    public String compute(User user) throws InterruptedException {
+    public String renderDocument(User user) throws InterruptedException {
         // slow render
         Thread.sleep(Duration.ofSeconds(5).toMillis());
         return "Some document";

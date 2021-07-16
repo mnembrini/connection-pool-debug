@@ -44,16 +44,16 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void givenTheUserExists_WhenOsivIsEnabled_ThenLazyInitWorksEverywhere() throws Exception {
-        mockMvc.perform(get("/users/root/document"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("root"));
+    void singleRequest() throws Exception {
+        callUserAndAssert();
     }
 
     @Test
     void multipleRequests() throws Exception {
         int requests = 10;
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        int testTimeoutSeconds = 20;
+        // enough threads to run in parallel
+        ExecutorService executorService = Executors.newFixedThreadPool(requests);
 
         List<Callable<Void>> tasks = IntStream.range(0, requests)
                 .mapToObj(this::createTask)
@@ -61,22 +61,24 @@ class UserControllerIntegrationTest {
         List<Future<Void>> futures = executorService.invokeAll(tasks);
 
         executorService.shutdown();
-        boolean termination = executorService.awaitTermination(20, TimeUnit.SECONDS);
+        boolean termination = executorService.awaitTermination(testTimeoutSeconds, TimeUnit.SECONDS);
         Assertions.assertTrue(termination, "Executor did not terminate properly");
 
         for (Future<Void> future : futures) {
             Assertions.assertDoesNotThrow(() -> future.get());
         }
+    }
 
-
+    private void callUserAndAssert() throws Exception {
+        mockMvc.perform(get("/users/root/document"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("root"));
     }
 
     Callable<Void> createTask(int i) {
         return () -> {
             log.info("Running task {}", i);
-            mockMvc.perform(get("/users/root/document"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.name").value("root"));
+            callUserAndAssert();
             return null;
         };
     }

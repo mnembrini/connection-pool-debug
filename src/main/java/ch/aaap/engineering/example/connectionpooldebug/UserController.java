@@ -1,8 +1,6 @@
 package ch.aaap.engineering.example.connectionpooldebug;
 
 import ch.aaap.engineering.example.connectionpooldebug.domain.User;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,19 +26,16 @@ public class UserController {
 
     @GetMapping("/{name}/document")
     public ResponseEntity<?> findOne(@PathVariable String name) throws InterruptedException {
-        Instant start = Instant.now();
+        log.debug("Looking for user [{}]", name);
         Optional<User> user = userService.findOne(name);
         if (user.isEmpty()) {
+            log.info("User not found");
             return ResponseEntity.notFound().build();
         }
-        Duration elapsed = Duration.between(start, Instant.now());
-        log.info("Found user {} in {}", user.get(), elapsed);
+        log.debug("Found user {}", user.get());
 
-
-        start = Instant.now();
-        String document = documentService.compute(user.get());
-        elapsed = Duration.between(start, Instant.now());
-        log.info("Rendered document {} in {}", document, elapsed);
+        String document = documentService.renderDocument(user.get());
+        log.debug("Rendered document [{}]", document);
 
         return user
                 .map(ResponseEntity::ok)

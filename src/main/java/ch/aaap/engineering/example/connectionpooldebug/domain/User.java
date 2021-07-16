@@ -4,6 +4,7 @@ import java.util.StringJoiner;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ public class User {
 
     private static final Logger log = LoggerFactory.getLogger(User.class);
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

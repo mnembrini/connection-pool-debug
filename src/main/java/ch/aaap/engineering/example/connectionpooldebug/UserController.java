@@ -2,6 +2,8 @@ package ch.aaap.engineering.example.connectionpooldebug;
 
 import ch.aaap.engineering.example.connectionpooldebug.domain.User;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final DocumentService documentService;
+    private final EntityManager entityManager;
 
-    public UserController(UserService userService, DocumentService documentService) {
+    public UserController(UserService userService, DocumentService documentService, EntityManager entityManager) {
         this.userService = userService;
         this.documentService = documentService;
+        this.entityManager = entityManager;
     }
 
     @GetMapping("/{name}/document")
@@ -33,6 +37,9 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         log.debug("Found user {}", user.get());
+
+        ((Session) entityManager.getDelegate()).close();
+
 
         String document = documentService.renderDocument(user.get());
         log.debug("Rendered document [{}]", document);

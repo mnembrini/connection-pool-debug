@@ -4,6 +4,7 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: false
+    open-in-view: false
   datasource:
     url: "jdbc:postgresql://localhost:5432/users"
     username: user
